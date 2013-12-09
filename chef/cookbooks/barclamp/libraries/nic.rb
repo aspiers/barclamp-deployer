@@ -719,7 +719,8 @@ class ::Nic
       ports = []
       ::IO.popen("ovs-vsctl list-ports #{@nic} 2> /dev/null") do |f|
         f.each do |line|
-          ports << line.strip
+          port = line.strip
+          ports << port if ::File.directory?("/sys/class/net/#{port}")
         end
       end
       ports.map{|i| ::Nic.new(i)}
